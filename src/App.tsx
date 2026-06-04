@@ -19,5 +19,7 @@ export const App = () => (
     create={EventCreate}
     edit={EventEdit}
     />
+    <Resource name="sessions" list={SessionList} create={SessionCreate} edit={SessionEdit}/>
+    <Resource name="speakers" list={SpeakerList} create={SpeakerCreate} edit={SpeakerEdit}/>
   </Admin>
 );
