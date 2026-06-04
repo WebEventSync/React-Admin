@@ -1,0 +1,57 @@
+"use client";
+
+import {
+    Create,
+    SimpleForm,
+    TextInput,
+    DateTimeInput,
+    ReferenceInput,
+    SelectInput,
+    required,
+} from "react-admin";
+
+export const SessionCreate = () => (
+    <Create title="Créer une session" redirect="list">
+        <SimpleForm>
+            <TextInput
+                source="title"
+                label="Titre"
+                validate={required("Le titre est obligatoire")}
+                fullWidth
+            />
+            <TextInput
+                source="description"
+                label="Description"
+                multiline
+                rows={3}
+                fullWidth
+            />
+            <ReferenceInput source="eventId" reference="events" label="Événement">
+                <SelectInput
+                    optionText="title"
+                    label="Événement"
+                    validate={required("L'événement est obligatoire")}
+                    fullWidth
+                />
+            </ReferenceInput>
+            <ReferenceInput source="roomId" reference="rooms" label="Salle">
+                <SelectInput
+                    optionText="name"
+                    label="Salle"
+                    validate={required("La salle est obligatoire")}
+                    fullWidth
+                />
+            </ReferenceInput>
+            <DateTimeInput
+                source="startTime"
+                label="Heure de début"
+                validate={required("L'heure de début est obligatoire")}
+            />
+            <DateTimeInput
+                source="endTime"
+                label="Heure de fin"
+                validate={required("L'heure de fin est obligatoire")}
+            />
+        </SimpleForm>
+    </Create>
+);
