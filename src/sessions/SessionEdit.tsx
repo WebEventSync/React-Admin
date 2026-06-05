@@ -9,6 +9,8 @@ import {
     SelectInput,
     required,
     useRecordContext,
+    ReferenceArrayInput,
+    AutocompleteArrayInput
 } from "react-admin";
 
 const SessionTitle = () => {
@@ -48,6 +50,16 @@ export const SessionEdit = () => (
                     fullWidth
                 />
             </ReferenceInput>
+            <ReferenceArrayInput
+            source="speakerIds"
+            reference="speakers"
+            >
+                    <AutocompleteArrayInput
+                    optionText={(record) =>
+                        `${record.firstName} ${record.lastName}`
+                    }
+                />
+            </ReferenceArrayInput>
             <DateTimeInput
                 source="startTime"
                 label="Heure de début"

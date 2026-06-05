@@ -11,6 +11,9 @@ import { SessionEdit } from "./sessions/SessionEdit";
 import { SpeakerEdit } from "./speakers/SpeakerEdit";
 import { SessionCreate } from "./sessions/SessionCreate";
 import { SpeakerCreate } from "./speakers/SpeakerCreate";
+import { RoomList } from "./rooms/RoomList"
+import { RoomCreate } from "./rooms/RoomCreate";
+import { RoomEdit } from "./rooms/RoomEdit";
  
 export const App = () => (
   <Admin layout={Layout} authProvider={authProvider}  dataProvider={dataProvider}>
@@ -21,5 +24,6 @@ export const App = () => (
     />
     <Resource name="sessions" list={SessionList} create={SessionCreate} edit={SessionEdit}/>
     <Resource name="speakers" list={SpeakerList} create={SpeakerCreate} edit={SpeakerEdit}/>
+    <Resource name="rooms" list={RoomList} create={RoomCreate} edit={RoomEdit}/>
   </Admin>
 );
