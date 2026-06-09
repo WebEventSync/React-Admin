@@ -17,7 +17,9 @@ export const dataProvider : DataProvider = {
         ...params.filter,
         });
 
-        const response = await fetch(`${URL}/${resource}?${query}`);
+        const response = await fetch(`${URL}/${resource}?${query}`, {
+            credentials: "include",
+            });
         const data = await response.json();
 
         return {
@@ -28,7 +30,9 @@ export const dataProvider : DataProvider = {
     /********************************************************************************************/
 
     getOne: async function <RecordType extends RaRecord = any>(resource: string, params: GetOneParams<RecordType> & QueryFunctionContext): Promise<GetOneResult<RecordType>> {
-        const response = await fetch(`${URL}/${resource}/${params.id}`);
+        const response = await fetch(`${URL}/${resource}/${params.id}`, {
+            credentials: "include",
+            });
         return {data: await response.json()};
     },
     /********************************************************************************************/
@@ -37,7 +41,9 @@ export const dataProvider : DataProvider = {
         const query = new URLSearchParams({
         id: params.ids.join(","),
         });
-        const response = await fetch(`${URL}/${resource}?${query}`);
+        const response = await fetch(`${URL}/${resource}?${query}`, {
+            credentials: "include",
+            });
         return {data: await response.json()};
     },
     /********************************************************************************************/
@@ -55,7 +61,9 @@ export const dataProvider : DataProvider = {
         [params.target]: params.id,
         ...params.filter,
         });
-        const response = await fetch(`${URL}/${resource}?${query}`);
+        const response = await fetch(`${URL}/${resource}?${query}`, {
+            credentials: "include",
+            });
         return {data: await response.json()};
     },
     /********************************************************************************************/
@@ -63,11 +71,12 @@ export const dataProvider : DataProvider = {
     update: async function <RecordType extends RaRecord = any>(resource: string, params: UpdateParams): Promise<UpdateResult<RecordType>> {
         console.log("UPDATE called", resource, params.id, params.data);
         const response = await fetch(`${URL}/${resource}/${params.id}`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(params.data),
+            credentials: "include",
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(params.data),
         });
         return {data: await response.json()};
     },
@@ -78,11 +87,12 @@ export const dataProvider : DataProvider = {
         id: params.ids.join(","),
         });
         const response = await fetch(`${URL}/${resource}?${query}`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(params.data),
+            credentials: "include",
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(params.data),
         });
         return {data: await response.json()};
     },
@@ -90,9 +100,10 @@ export const dataProvider : DataProvider = {
 
     create: async function <RecordType extends Omit<RaRecord, "id"> = any, ResultRecordType extends RaRecord = RecordType & { id: Identifier }>(resource: string, params: CreateParams): Promise<CreateResult<ResultRecordType>> {
         const response = await fetch(`${URL}/${resource}`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
+            credentials: "include",
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
         },
         body: JSON.stringify(params.data),
         });
@@ -102,7 +113,8 @@ export const dataProvider : DataProvider = {
 
     delete: async function <RecordType extends RaRecord = any>(resource: string, params: DeleteParams<RecordType>): Promise<DeleteResult<RecordType>> {
         const response = await fetch(`${URL}/${resource}/${params.id}`, {
-        method: "DELETE",
+            credentials: "include",
+            method: "DELETE",
         });
         return {data: await response.json()};
     },
@@ -113,7 +125,8 @@ export const dataProvider : DataProvider = {
         id: params.ids.join(","),
         });
         const response = await fetch(`${URL}/${resource}?${query}`, {
-        method: "DELETE",
+            credentials: "include",
+            method: "DELETE",
         });
         return {data: await response.json()};
     }

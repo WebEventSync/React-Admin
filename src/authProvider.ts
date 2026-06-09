@@ -1,43 +1,59 @@
 import { AuthProvider, HttpError } from "react-admin";
-import data from "./users.json";
 
-/**
- * This authProvider is only for test purposes. Don't use it in production.
- */
+const API_URL = "http://localhost:3000/api/auth";
+
 export const authProvider: AuthProvider = {
-  login: ({ username, password }) => {
-    const user = data.users.find(
-      (u) => u.username === username && u.password === password,
-    );
+  login: async ({ username, password }) => {
+    const response = await fetch(`${API_URL}/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ email: username, password }),
+    });
 
-    if (user) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { password, ...userToPersist } = user;
-      localStorage.setItem("user", JSON.stringify(userToPersist));
-      return Promise.resolve();
+    if (!response.ok) {
+      const data = await response.json();
+      throw new HttpError(data.error || "Unauthorized", response.status);
     }
 
-    return Promise.reject(
-      new HttpError("Unauthorized", 401, {
-        message: "Invalid username or password",
-      }),
-    );
-  },
-  logout: () => {
-    localStorage.removeItem("user");
     return Promise.resolve();
   },
-  checkError: () => Promise.resolve(),
-  checkAuth: () =>
-    localStorage.getItem("user") ? Promise.resolve() : Promise.reject(),
-  getPermissions: () => {
-    return Promise.resolve(undefined);
-  },
-  getIdentity: () => {
-    const persistedUser = localStorage.getItem("user");
-    const user = persistedUser ? JSON.parse(persistedUser) : null;
 
-    return Promise.resolve(user);
+  logout: async () => {
+    await fetch(`${API_URL}/logout`, {
+      method: "POST",
+      credentials: "include",
+    });
+    return Promise.resolve();
+  },
+
+  checkError: ({ status }) => {
+    if (status === 401 || status === 403) {
+      return Promise.reject();
+    }
+    return Promise.resolve();
+  },
+
+  checkAuth: async () => {
+    const response = await fetch(`${API_URL}/me`, {
+      credentials: "include",
+    });
+    if (!response.ok) return Promise.reject();
+    return Promise.resolve();
+  },
+
+  getPermissions: () => Promise.resolve(undefined),
+
+  getIdentity: async () => {
+    const response = await fetch(`${API_URL}/me`, {
+      credentials: "include",
+    });
+    if (!response.ok) return Promise.reject();
+    const data = await response.json();
+    return Promise.resolve({
+      id: data.user.id,
+      fullName: data.user.email,
+    });
   },
 };
 
