@@ -63,6 +63,7 @@ export const SessionEdit = () => (
                     optionText={(record) =>
                         `${record.firstName} ${record.lastName}`
                     }
+                    validate={required("Au moins un intervenant est obligatoire")}
                 />
             </ReferenceArrayInput>
             <DateTimeInput
