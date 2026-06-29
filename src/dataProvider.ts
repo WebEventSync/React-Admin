@@ -2,6 +2,19 @@ import { CreateParams, CreateResult, DataProvider, DeleteManyParams, DeleteManyR
 
 const URL = "http://localhost:3000/api/admin";
 
+async function parseResponse<T>(response: Response): Promise<T> {
+    const text = await response.text();
+    if (!text) return null as T;
+
+    const payload = JSON.parse(text);
+
+    if (payload && typeof payload === "object" && "success" in payload && "data" in payload) {
+        return payload.data as T;
+    }
+
+    return payload as T;
+}
+
 export const dataProvider: DataProvider = {
     getList: async function <RecordType extends RaRecord = any>(resource: string, params: GetListParams & QueryFunctionContext): Promise<GetListResult<RecordType>> {
         const page = params.pagination?.page || 1;
@@ -20,17 +33,18 @@ export const dataProvider: DataProvider = {
         const response = await fetch(`${URL}/${resource}?${query}`, {
             credentials: "include",
         });
-        const data = await response.json();
+        const data = await parseResponse<any[]>(response);
+        const list = Array.isArray(data) ? data : [];
 
         if (resource === "sessions") {
-            data.forEach((session: any) => {
+            list.forEach((session: any) => {
                 if (Array.isArray(session.speakers)) {
                     session.speakerIds = session.speakers.map((s: any) => s.speaker?.id ?? s.id);
                 }
             });
         }
 
-        return { data, total: data.length };
+        return { data: list, total: list.length };
     },
     /********************************************************************************************/
 
@@ -38,9 +52,9 @@ export const dataProvider: DataProvider = {
         const response = await fetch(`${URL}/${resource}/${params.id}`, {
             credentials: "include",
         });
-        const data = await response.json();
+        const data = await parseResponse<any>(response);
 
-        if (resource === "sessions" && Array.isArray(data.speakers)) {
+        if (resource === "sessions" && data && Array.isArray(data.speakers)) {
             data.speakerIds = data.speakers.map((s: any) => s.speakerId);
         }
 
@@ -55,7 +69,8 @@ export const dataProvider: DataProvider = {
         const response = await fetch(`${URL}/${resource}?${query}`, {
             credentials: "include",
         });
-        return { data: await response.json() };
+        const data = await parseResponse<any[]>(response);
+        return { data: Array.isArray(data) ? data : [] };
     },
     /********************************************************************************************/
 
@@ -75,7 +90,8 @@ export const dataProvider: DataProvider = {
         const response = await fetch(`${URL}/${resource}?${query}`, {
             credentials: "include",
         });
-        return { data: await response.json() };
+        const data = await parseResponse<any[]>(response);
+        return { data: Array.isArray(data) ? data : [] };
     },
     /********************************************************************************************/
 
@@ -89,7 +105,8 @@ export const dataProvider: DataProvider = {
             },
             body: JSON.stringify(params.data),
         });
-        return { data: await response.json() };
+        const data = await parseResponse<any>(response);
+        return { data };
     },
     /********************************************************************************************/
 
@@ -105,7 +122,8 @@ export const dataProvider: DataProvider = {
             },
             body: JSON.stringify(params.data),
         });
-        return { data: await response.json() };
+        const data = await parseResponse<any[]>(response);
+        return { data: Array.isArray(data) ? data : [] };
     },
     /********************************************************************************************/
 
@@ -118,7 +136,8 @@ export const dataProvider: DataProvider = {
             },
             body: JSON.stringify(params.data),
         });
-        return { data: await response.json() };
+        const data = await parseResponse<any>(response);
+        return { data };
     },
     /********************************************************************************************/
 
@@ -127,7 +146,8 @@ export const dataProvider: DataProvider = {
             credentials: "include",
             method: "DELETE",
         });
-        return { data: await response.json() };
+        const data = await parseResponse<any>(response);
+        return { data: data ?? { id: params.id } };
     },
     /********************************************************************************************/
 
@@ -139,6 +159,7 @@ export const dataProvider: DataProvider = {
             credentials: "include",
             method: "DELETE",
         });
-        return { data: await response.json() };
+        const data = await parseResponse<any[]>(response);
+        return { data: Array.isArray(data) ? data : [] };
     }
 }
