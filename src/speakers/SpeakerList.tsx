@@ -32,7 +32,20 @@ export const SpeakerList = () => (
         filters={speakerFilters}
         sort={{ field: "lastName", order: "ASC" }}
     >
-        <Datagrid rowClick="edit" bulkActionButtons={false}>
+        <Datagrid sx={{
+            background: "#141d38",
+            borderRadius: 4,
+
+            "& .RaDatagrid-headerCell": {
+                background: "#11172f",
+                color: "#19d3ff",
+                fontWeight: "bold",
+            },
+
+            "& .RaDatagrid-row:hover": {
+                background: "#1c2550",
+            },
+        }} rowClick="edit" bulkActionButtons={false}>
             <FunctionField
                 label="Nom complet"
                 render={(record: any) => `${record.firstName} ${record.lastName}`}

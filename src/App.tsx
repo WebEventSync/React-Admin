@@ -18,9 +18,10 @@ import { QuestionList } from "./questions/QuestionList";
 import { AdminList } from "./admins/AdminList";
 import { AdminCreate } from "./admins/AdminCreate";
 import { AdminEdit } from "./admins/AdminEdit";
+import theme from "./theme";
  
 export const App = () => (
-  <Admin layout={Layout} authProvider={authProvider}  dataProvider={dataProvider}>
+  <Admin layout={Layout} theme={theme} authProvider={authProvider}  dataProvider={dataProvider}>
     <Resource name="events"
     list={EventList}
     create={EventCreate}
