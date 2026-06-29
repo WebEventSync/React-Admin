@@ -22,10 +22,15 @@ export const dataProvider: DataProvider = {
         });
         const data = await response.json();
 
-        return {
-            data,
-            total: data.length,
-        };
+        if (resource === "sessions") {
+            data.forEach((session: any) => {
+                if (Array.isArray(session.speakers)) {
+                    session.speakerIds = session.speakers.map((s: any) => s.speaker?.id ?? s.id);
+                }
+            });
+        }
+
+        return { data, total: data.length };
     },
     /********************************************************************************************/
 
