@@ -2,7 +2,7 @@ import { CreateParams, CreateResult, DataProvider, DeleteManyParams, DeleteManyR
 
 const URL = "http://localhost:3000/api/admin";
 
-export const dataProvider : DataProvider = {
+export const dataProvider: DataProvider = {
     getList: async function <RecordType extends RaRecord = any>(resource: string, params: GetListParams & QueryFunctionContext): Promise<GetListResult<RecordType>> {
         const page = params.pagination?.page || 1;
         const perPage = params.pagination?.perPage || 10;
@@ -10,16 +10,16 @@ export const dataProvider : DataProvider = {
         const order = params.sort?.order || "ASC";
 
         const query = new URLSearchParams({
-        _sort: field,
-        _order: order,
-        _start: String((page - 1) * perPage),
-        _limit: String(perPage),
-        ...params.filter,
+            _sort: field,
+            _order: order,
+            _start: String((page - 1) * perPage),
+            _limit: String(perPage),
+            ...params.filter,
         });
 
         const response = await fetch(`${URL}/${resource}?${query}`, {
             credentials: "include",
-            });
+        });
         const data = await response.json();
 
         return {
@@ -32,19 +32,25 @@ export const dataProvider : DataProvider = {
     getOne: async function <RecordType extends RaRecord = any>(resource: string, params: GetOneParams<RecordType> & QueryFunctionContext): Promise<GetOneResult<RecordType>> {
         const response = await fetch(`${URL}/${resource}/${params.id}`, {
             credentials: "include",
-            });
-        return {data: await response.json()};
+        });
+        const data = await response.json();
+
+        if (resource === "sessions" && Array.isArray(data.speakers)) {
+            data.speakerIds = data.speakers.map((s: any) => s.speakerId);
+        }
+
+        return { data };
     },
     /********************************************************************************************/
 
     getMany: async function <RecordType extends RaRecord = any>(resource: string, params: GetManyParams<RecordType> & QueryFunctionContext): Promise<GetManyResult<RecordType>> {
         const query = new URLSearchParams({
-        id: params.ids.join(","),
+            id: params.ids.join(","),
         });
         const response = await fetch(`${URL}/${resource}?${query}`, {
             credentials: "include",
-            });
-        return {data: await response.json()};
+        });
+        return { data: await response.json() };
     },
     /********************************************************************************************/
 
@@ -54,17 +60,17 @@ export const dataProvider : DataProvider = {
         const field = params.sort?.field || "id";
         const order = params.sort?.order || "ASC";
         const query = new URLSearchParams({
-        _sort: field,
-        _order: order,
-        _start: String((page - 1) * perPage),
-        _limit: String(perPage),
-        [params.target]: params.id,
-        ...params.filter,
+            _sort: field,
+            _order: order,
+            _start: String((page - 1) * perPage),
+            _limit: String(perPage),
+            [params.target]: params.id,
+            ...params.filter,
         });
         const response = await fetch(`${URL}/${resource}?${query}`, {
             credentials: "include",
-            });
-        return {data: await response.json()};
+        });
+        return { data: await response.json() };
     },
     /********************************************************************************************/
 
@@ -78,13 +84,13 @@ export const dataProvider : DataProvider = {
             },
             body: JSON.stringify(params.data),
         });
-        return {data: await response.json()};
+        return { data: await response.json() };
     },
     /********************************************************************************************/
 
     updateMany: async function <RecordType extends RaRecord = any>(resource: string, params: UpdateManyParams): Promise<UpdateManyResult<RecordType>> {
         const query = new URLSearchParams({
-        id: params.ids.join(","),
+            id: params.ids.join(","),
         });
         const response = await fetch(`${URL}/${resource}?${query}`, {
             credentials: "include",
@@ -94,7 +100,7 @@ export const dataProvider : DataProvider = {
             },
             body: JSON.stringify(params.data),
         });
-        return {data: await response.json()};
+        return { data: await response.json() };
     },
     /********************************************************************************************/
 
@@ -104,10 +110,10 @@ export const dataProvider : DataProvider = {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-        },
-        body: JSON.stringify(params.data),
+            },
+            body: JSON.stringify(params.data),
         });
-        return {data: await response.json()};
+        return { data: await response.json() };
     },
     /********************************************************************************************/
 
@@ -116,18 +122,18 @@ export const dataProvider : DataProvider = {
             credentials: "include",
             method: "DELETE",
         });
-        return {data: await response.json()};
+        return { data: await response.json() };
     },
     /********************************************************************************************/
 
     deleteMany: async function <RecordType extends RaRecord = any>(resource: string, params: DeleteManyParams<RecordType>): Promise<DeleteManyResult<RecordType>> {
         const query = new URLSearchParams({
-        id: params.ids.join(","),
+            id: params.ids.join(","),
         });
         const response = await fetch(`${URL}/${resource}?${query}`, {
             credentials: "include",
             method: "DELETE",
         });
-        return {data: await response.json()};
+        return { data: await response.json() };
     }
 }

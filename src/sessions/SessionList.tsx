@@ -14,6 +14,9 @@ import {
     SearchInput,
     ReferenceInput,
     SelectInput,
+    ArrayField,
+    SingleFieldList,
+    FunctionField,
 } from "react-admin";
 
 const sessionFilters = [
@@ -44,6 +47,13 @@ export const SessionList = () => (
             <TextField source="room.name" label="Salle" sortable={false} />
             <DateField source="startTime" label="Début" showTime />
             <DateField source="endTime" label="Fin" showTime />
+            <ArrayField source="speakers" label="Intervenant(s)">
+                <SingleFieldList>
+                    <FunctionField
+                        render={(record) => `${record.speaker.firstName} ${record.speaker.lastName}`}
+                    />
+                </SingleFieldList>
+            </ArrayField>
             <EditButton label="Modifier" />
             <DeleteButton label="Supprimer" />
         </Datagrid>
