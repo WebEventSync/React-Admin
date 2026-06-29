@@ -15,7 +15,12 @@ const SpeakerTitle = () => {
 
 export const SpeakerEdit = () => (
     <Edit title={<SpeakerTitle />} redirect="list">
-        <SimpleForm>
+        <SimpleForm sx={{
+            maxWidth: 800,
+            background: "#141d38",
+            borderRadius: 4,
+            p: 4,
+        }}>
             <TextInput
                 source="firstName"
                 label="Prénom"

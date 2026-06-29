@@ -11,7 +11,12 @@ import {
 
 export const EventCreate = () => (
     <Create title="Créer un événement" redirect="list">
-        <SimpleForm>
+        <SimpleForm sx={{
+            maxWidth: 800,
+            background: "#141d38",
+            borderRadius: 4,
+            p: 4,
+        }}>
             <TextInput
                 source="title"
                 label="Titre"

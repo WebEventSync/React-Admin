@@ -31,7 +31,20 @@ export const QuestionList = () => (
         filters={Filters}
         sort={{ field: "createdAt", order: "DESC" }}
     >
-        <Datagrid bulkActionButtons={false}>
+        <Datagrid sx={{
+            background: "#141d38",
+            borderRadius: 4,
+
+            "& .RaDatagrid-headerCell": {
+                background: "#11172f",
+                color: "#19d3ff",
+                fontWeight: "bold",
+            },
+
+            "& .RaDatagrid-row:hover": {
+                background: "#1c2550",
+            },
+        }} bulkActionButtons={false}>
             <TextField source="content" label="Contenu" />
             <TextField source="authorName" label="Auteur" />
             <NumberField source="upvotes" label="Votes" />

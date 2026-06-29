@@ -33,7 +33,20 @@ export const RoomList = () => (
         filters={roomFilters}
         sort={{ field: "capacity", order: "DESC" }}
     >
-        <Datagrid rowClick="edit" bulkActionButtons={false}>
+        <Datagrid sx={{
+            background: "#141d38",
+            borderRadius: 4,
+
+            "& .RaDatagrid-headerCell": {
+                background: "#11172f",
+                color: "#19d3ff",
+                fontWeight: "bold",
+            },
+
+            "& .RaDatagrid-row:hover": {
+                background: "#1c2550",
+            },
+        }} rowClick="edit" bulkActionButtons={false}>
             <TextField source="name" label="Nom" />
             <NumberField source="capacity" label="Capacité"/>
             <EditButton/>

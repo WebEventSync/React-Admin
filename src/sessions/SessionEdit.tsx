@@ -20,7 +20,12 @@ const SessionTitle = () => {
 
 export const SessionEdit = () => (
     <Edit title={<SessionTitle />} redirect="list">
-        <SimpleForm>
+        <SimpleForm sx={{
+            maxWidth: 800,
+            background: "#141d38",
+            borderRadius: 4,
+            p: 4,
+        }}>
             <TextInput
                 source="title"
                 label="Titre"
