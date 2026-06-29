@@ -9,10 +9,8 @@ import {
     ExportButton,
     FilterButton,
     SearchInput,
-    EditButton,
     DeleteButton,
     DateField,
-    ReferenceField
 } from "react-admin";
 
 const Filters = [
@@ -28,20 +26,19 @@ const Actions = () => (
 
 export const QuestionList = () => (
     <List
-        title="Salle"
+        title="Questions"
         actions={<Actions />}
         filters={Filters}
-        sort={{ field: "capacity", order: "DESC" }}
+        sort={{ field: "createdAt", order: "DESC" }}
     >
-        <Datagrid rowClick="edit" bulkActionButtons={false}>
+        <Datagrid bulkActionButtons={false}>
             <TextField source="content" label="Contenu" />
             <TextField source="authorName" label="Auteur" />
-            <NumberField source="upvotes" label="Capacité"/>
-            <DateField source="createdAt" label="Date"/>
-            <ReferenceField source="sessionId" reference="sessions" label="Session">
-                <TextField source="title"/>
-            </ReferenceField>
-            <DeleteButton/>
+            <NumberField source="upvotes" label="Votes" />
+            <DateField source="createdAt" label="Date" />
+            <TextField source="session.title" label="Session" />
+            <TextField source="session.event.title" label="Événement" />
+            <DeleteButton />
         </Datagrid>
     </List>
 );
