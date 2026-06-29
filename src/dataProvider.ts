@@ -22,10 +22,15 @@ export const dataProvider : DataProvider = {
             });
         const data = await response.json();
 
-        return {
-            data,
-            total: data.length,
-        };
+        if (resource === "sessions") {
+            data.forEach((session: any) => {
+                if (Array.isArray(session.speakers)) {
+                    session.speakerIds = session.speakers.map((s: any) => s.speaker?.id ?? s.id);
+                }
+            });
+        }
+
+        return { data, total: data.length };
     },
     /********************************************************************************************/
 
@@ -33,7 +38,11 @@ export const dataProvider : DataProvider = {
         const response = await fetch(`${URL}/${resource}/${params.id}`, {
             credentials: "include",
             });
-        return {data: await response.json()};
+        const data = await response.json();
+        if (resource === "sessions" && Array.isArray(data.speakers)) {
+            data.speakerIds = data.speakers.map((s: any) => s.speaker?.id ?? s.id);
+        }
+        return {data};
     },
     /********************************************************************************************/
 
